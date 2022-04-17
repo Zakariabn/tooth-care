@@ -1,31 +1,122 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCocktail } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import auth from "../../../firebase.init";
 
 const Login = () => {
+  const [passVisible, setPassVisible] = useState(false);
+
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useSignInWithEmailAndPassword(auth);
+
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    emailError: "",
+    passwordError: "",
+    generalError: "",
+  });
+
+  function handelEmailChange(e) {
+    const emailRegex = /\S+@\S+\.\S+/;
+    const validEmail = emailRegex.test(e.target.value);
+    if (validEmail) {
+      setUserInfo({ ...userInfo, email: e.target.value.toLowerCase() });
+      setErrors({ ...errors, emailError: "" });
+    } else {
+      setErrors({ ...errors, emailError: "Invalid Email" });
+      setUserInfo({ ...userInfo, email: "" });
+    }
+  }
+
+  function handelPasswordChange(e) {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{6,}$/;
+    const validPassword = passwordRegex.test(e.target.value);
+
+    if (validPassword) {
+      setUserInfo({ ...userInfo, password: e.target.value });
+      setErrors({ ...errors, passwordError: "" });
+    } else {
+      setErrors({
+        ...errors,
+        passwordError:
+          "Password mast contain minimum 6 length and small, capital, number, special character. ",
+      });
+      setUserInfo({ ...userInfo, password: "" });
+    }
+  }
+
+  function handelLogin(e) {
+    e.preventDefault();
+
+    if( userInfo.email && userInfo.password){
+      signInWithEmailAndPassword(userInfo.email, userInfo.password);
+      setErrors({...errors, generalError: ''})
+    }else {
+      setErrors({...errors, generalError: 'Email and password must require'})
+    }
+  }
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
+  if (user) {
+
+    navigate(from, {replace: true})
+  }
+
   return (
     <div className="w-full flex flex-col justify-center items-center my-10">
-      <form className="w-[320px] flex flex-col items-center">
-        <div className="w-full flex gap-5 justify-between mb-3">
+      <form className="w-[320px] flex flex-col items-center" onSubmit={handelLogin}>
+        <div className="w-full mb-3">
           <input
             type="text"
             name="email"
             id="email"
-            autoComplete='off'
+            autoComplete="off"
             placeholder="Email address"
+            onChange={handelEmailChange}
             className="w-full text-xl border border-gray-400 focus:outline-none pl-4 pr-2 rounded-[15px_15px_0px_0px] h-[40px]"
           />
+          <p className="text-[coral] ml-3">
+            {errors.emailError && errors.emailError}
+          </p>
         </div>
-        <div className="w-full flex gap-5 justify-between">
+        <div className="w-full relative">
           <input
-            type="password"
+            type={passVisible ? "text" : "password"}
             name="password"
             id="password"
             placeholder="Password"
+            onChange={handelPasswordChange}
             className="w-full text-xl border border-gray-400 focus:outline-none pl-4 pr-2 rounded-[0px_0px_15px_15px] h-[40px]"
           />
+          {passVisible ? (
+            <FontAwesomeIcon
+              icon={faEye}
+              onClick={() => setPassVisible(!passVisible)}
+              className="text-primary absolute right-4 top-3"
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faEyeSlash}
+              onClick={() => setPassVisible(!passVisible)}
+              className="text-primary absolute right-4 top-3"
+            />
+          )}
+          <p className="text-[coral] ml-3">
+            {errors.passwordError && errors.passwordError}
+          </p>
         </div>
         <div className="w-full flex justify-between mt-5 text-md font-medium">
           <div className="flex items-center gap-2">
@@ -37,7 +128,9 @@ const Login = () => {
             />
             <label htmlFor="">Remember me</label>
           </div>
-          <button className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer">Forgot password?</button>
+          <button className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer">
+            Forgot password?
+          </button>
         </div>
         <button
           type="submit"
@@ -48,7 +141,10 @@ const Login = () => {
       </form>
       <div className="my-5">
         <p className="text-primary">
-          Did you new hear? <button className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer"><Link to='/sign-up'>Sign up</Link></button>
+          Did you new hear?{" "}
+          <button className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer">
+            <Link to="/sign-up">Sign up</Link>
+          </button>
         </p>
       </div>
 
