@@ -9,13 +9,13 @@ const Nav = () => {
   let user;
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center shadow-sm">
       <nav className="w-full max-w-screen-lg flex justify-between items-center px-4 py-2">
         <div>
           <img src={logo} alt="Tooth care logo" className="h-[50px]"/>
         </div>
 
-        <div className="flex gap-4 font-medium text-[#06255f]">
+        <div className="flex gap-4 font-bold font-title text-primary no-underline">
           <CustomLink to="/">Home</CustomLink>
           <CustomLink to="/services">Services</CustomLink>
           <CustomLink to="/blogs">Blogs</CustomLink>

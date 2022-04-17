@@ -1,0 +1,21 @@
+.custom-class-1:hover > button {
+  display: inline;
+  animation: popUp 0.3s ease;
+}
+.custom-class-2:hover > button {
+  display: inline;
+  animation: popUp 0.3s ease;
+}
+.custom-class-3:hover > button {
+  display: inline;
+  animation: popUp 0.3s ease;
+}
+
+@keyframes popUp {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
+}

@@ -9,9 +9,9 @@ function CustomLink({ children, to, ...props }) {
     <div>
       <Link
         className={
-          ` py-4
+          ` py-5
           ${match 
-            ? "border-b-4 border-[#2EA6F7] rounded-md" 
+            ? "border-b-4 border-[#2EA6F7] rounded-sm" 
             : ""
           }`
         }
