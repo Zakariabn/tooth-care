@@ -8,7 +8,6 @@ const Service = ({service}) => {
   const {id, img, title, disc} = service;
 
   const handelAppointment = useContext(BookingContext);
-  console.log(handelAppointment);
   return (
     <div className={`w-[300px] h-auto p-2 flex flex-col gap-4 rounded-xl items-center justify-center bg-white relative shadow-2xl pb-10 ${'custom-class-'+ id}`}>
       <img src={img} alt="" />

@@ -4,11 +4,13 @@ import logo from "../../../asset/Icon/logo.png";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faAngleUp } from "@fortawesome/free-solid-svg-icons";
-// import auth from '';
+import auth from "../../../firebase.init";
+import placeHolderImg from '../../../asset/Images/user-account-img-placeholder.png';
+
 
 const Nav = () => {
-  // const [user, loading, error] = useAuthState(auth);
-  let user; // this variable for demo user we need to change with useAuthState user
+  const [user, loading, error] = useAuthState(auth);
+  
   const [menuState, setMenuState] = useState(false);
 
   return (
@@ -51,7 +53,10 @@ const Nav = () => {
                     <CustomLink to="/login">Login</CustomLink>
                   </>
                 ) : (
-                  <CustomLink to="/logout"><span className="block w-[35px] h-[35px] bg-slate-300 rounded-full"></span></CustomLink>
+                  <CustomLink to="/user-account">
+                    <span title={user.email} className="block bg-slate-300 rounded-full">
+                      <img src={user?.photoURL || placeHolderImg} alt="" className="w-[35px] h-[35px] rounded-full"/>
+                    </span></CustomLink>
                 )}
               </div>
             </div>

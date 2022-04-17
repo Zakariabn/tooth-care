@@ -11,7 +11,6 @@ const OfferingService = () => {
 
   function handelBooking() {
     navigate('/checkout');
-    console.log('success');
   }
 
   return (

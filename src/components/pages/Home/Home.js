@@ -12,7 +12,6 @@ const Home = () => {
   
     function handelBooking() {
       navigate('/checkout');
-      console.log('success');
     }
 
   return (
