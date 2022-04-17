@@ -20,6 +20,7 @@ module.exports = {
       colors: {
         primary: '#06255f',
         shadeOfPrimary: '#2EA6F7',
+        navBgShadow: 'rgba(255, 255, 244, 0.9)',
       },
       
     },

@@ -1,13 +1,28 @@
-import React from 'react';
-import Banner from './Banner/Banner';
-import Services from './Services/Services';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { BookingContext } from "../../../context/context";
+import Banner from "./Banner/Banner";
+import Pricing from "./Pricing/Pricing";
+import Services from "./Services/Services";
+
+
 
 const Home = () => {
+  const navigate = useNavigate();
+  
+    function handelBooking() {
+      navigate('/checkout');
+      console.log('success');
+    }
+
   return (
-    <div className='flex flex-col items-center'>
-      <Banner></Banner>
-      <Services></Services>
-    </div>
+    <BookingContext.Provider value={handelBooking}>
+      <div className="flex flex-col items-center">
+        <Banner></Banner>
+        <Services></Services>
+        <Pricing></Pricing>
+      </div>
+    </BookingContext.Provider>
   );
 };
 

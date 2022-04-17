@@ -9,10 +9,10 @@ function CustomLink({ children, to, ...props }) {
     <div>
       <Link
         className={
-          ` py-5
+          ` py-5 
           ${match 
-            ? "border-b-4 border-[#2EA6F7] rounded-sm" 
-            : ""
+            ? "md:border-b-4 text-shadeOfPrimary md: border-[#2EA6F7] rounded-sm" 
+            : "text-primary"
           }`
         }
         to={to}

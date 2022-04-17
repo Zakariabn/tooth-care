@@ -33,7 +33,7 @@ const Banner = () => {
           <div class="carousel-item active relative float-left w-full">
             <img
               src={carImg1}
-              class="block w-full h-[400px]"
+              class="block w-full h-[200px] md:h-[400px]"
               alt="Motorbike Smoke"
             />
             <div class="carousel-caption hidden md:block absolute text-center bg-gradient-to-b  from-[#E7E7E7] to-[#f3f3f3] rounded-md">
@@ -45,7 +45,7 @@ const Banner = () => {
           <div class="carousel-item relative float-left w-full">
             <img
               src={carImg2}
-              class="block w-full h-[400px]"
+              class="block w-full h-[200px] md:h-[400px]"
               alt="Mountaintop"
             />
             <div class="carousel-caption hidden md:block absolute text-center bg-gradient-to-b  from-[#ebe5dd] to-[#ebe2d5] rounded-md">
@@ -57,7 +57,7 @@ const Banner = () => {
           <div class="carousel-item relative float-left w-full">
             <img
               src={carImg3}
-              class="block w-full h-[400px]"
+              class="block w-full h-[200px] md:h-[400px]"
               alt="Woman Reading a Book"
             />
             <div class="carousel-caption hidden md:block absolute text-center bg-gradient-to-b  from-[#EAD4B2] to-[#cab088]  rounded-md">

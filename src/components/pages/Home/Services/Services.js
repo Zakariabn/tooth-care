@@ -1,40 +1,21 @@
-import React from "react";
-import toothP from "../../../../asset/Images/grafic/grafic-1.png";
-import teethWhite from "../../../../asset/Images/grafic/grafic-2.png";
-import cosmeticDen from "../../../../asset/Images/grafic/grafic-3.png";
+import React, { useContext } from 'react';
+import { BookingContext } from '../../../../context/context';
+
+import serviceData from './data';
 import Service from "./Service";
 
-const serviceData = [
-  {
-    id: 1,
-    img: toothP,
-    title: 'Tooth Protection',
-    disc: "We have introduced the principle of family medicine, which means that the family practitioner will",
-  },
-  {
-    id: 2,
-    img: teethWhite,
-    title: 'Teeth Whitening',
-    disc: "We have introduced the principle of family medicine, which means that the family practitioner will",
-  },
-  {
-    id: 3,
-    img: cosmeticDen,
-    title: 'Cosmetic Dentistry',
-    disc: "We have introduced the principle of family medicine, which means that the family practitioner will",
-  },
-];
-
 const Services = () => {
+  const handelAppointment = useContext(BookingContext);
+
   return (
-    <div className="max-w-screen-lg flex flex-col items-center relative top-[-70px] z-10">
-      <div className="flex justify-center gap-5">
+    <div className="max-w-screen-lg flex flex-col items-center relative mt-10 lg:mt-0 lg:top-[-70px] z-10">
+      <div className="flex flex-wrap lg:flex-row justify-center gap-5">
         {serviceData.map((service) => {
           return <Service key={service.id} service={service}></Service>;
         })}
       </div>
         
-      <button className="mt-20 bg-shadeOfPrimary px-32 py-3 rounded-md text-white font-text hover:bg-primary duration-200 ease-in">Book An Appointment</button>
+      <button onClick={handelAppointment} className="my-20 bg-shadeOfPrimary px-32 py-3 rounded-md text-white font-text hover:bg-primary duration-200 ease-in">Book An Appointment</button>
     </div>
   );
 };
