@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
+import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
   const [passVisible, setPassVisible] = useState(false);
@@ -70,9 +71,24 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
+
   if (user) {
 
     navigate(from, {replace: true})
+  }
+
+  // Create user with google
+  const [signInWithGoogle, user_google, loading_google, error_google] = useSignInWithGoogle(auth);
+
+  function handelGoogleSignUp() {
+    signInWithGoogle();
+  }
+
+//  Google user 
+  if(user_google) {
+    setErrors({ ...errors, firebaseError: "" });
+    toast("Email verification link send");
+    navigate(from, { replace: true });
   }
 
   return (
@@ -118,6 +134,7 @@ const Login = () => {
             {errors.passwordError && errors.passwordError}
           </p>
         </div>
+        <p className="text-red-500 ml-3 font-medium">{errors.generalError && errors.generalError}</p>
         <div className="w-full flex justify-between mt-5 text-md font-medium">
           <div className="flex items-center gap-2">
             <input
@@ -155,13 +172,13 @@ const Login = () => {
       </div>
 
       <div className="w-[320px] flex flex-col gap-3 text-white text-lg font-medium">
-        <button className="w-full bg-[#3B5998] py-1.5 rounded-md">
-          <FontAwesomeIcon icon={faFacebookSquare} />
-          <span className="ml-2">Continue With Facebook</span>
-        </button>
-        <button className="w-full bg-[#DB4437] py-1.5 rounded-md">
+        <button className="w-full bg-[#DB4437] py-1.5 rounded-md" onClick={handelGoogleSignUp}>
           <FontAwesomeIcon icon={faGoogle} />
           <span className="ml-2">Continue With Google</span>
+        </button>
+        <button className="w-full bg-[#3B5998] py-1.5 rounded-md">
+          <FontAwesomeIcon icon={faFacebookSquare} />
+          <span className="ml-2">Continue With Facebook <br /> working on it</span>
         </button>
       </div>
     </div>

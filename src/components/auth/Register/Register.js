@@ -2,31 +2,27 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../../firebase.init";
 
 const Register = () => {
-
-  const [
-    createUserWithEmailAndPassword,
-    user,
-    loading,
-    error,
-  ] = useCreateUserWithEmailAndPassword(auth);
-
   const [passVisible, setPassVisible] = useState(false);
   const [agree, setAgree] = useState(true);
 
   function handelTramsAndConditionCheck(e) {
-    if( userInfo.email && userInfo.password){
+    if (userInfo.email && userInfo.password) {
       e.target.checked ? setAgree(!agree) : setAgree(!agree);
-      setErrors({...errors, generalError: ''})
-    }
-    else {
+      setErrors({ ...errors, generalError: "" });
+    } else {
       e.target.checked = false;
-      setErrors({...errors, generalError: 'Email and password must require'})
+      setErrors({ ...errors, generalError: "Email and password must require" });
     }
   }
 
@@ -42,7 +38,8 @@ const Register = () => {
     phoneNumberError: "",
     emailError: "",
     passwordError: "",
-    generalError: ""
+    generalError: "",
+    firebaseError: "",
   });
 
   function handelNameChange(e) {
@@ -71,7 +68,7 @@ const Register = () => {
       setErrors({ ...errors, emailError: "" });
     } else {
       setErrors({ ...errors, emailError: "Invalid Email" });
-      setUserInfo({ ...userInfo, email: '' });
+      setUserInfo({ ...userInfo, email: "" });
     }
   }
 
@@ -85,32 +82,93 @@ const Register = () => {
     } else {
       setErrors({
         ...errors,
-        passwordError: "Password mast contain minimum 6 length and small, capital, number, special character. "
+        passwordError:
+          "Password mast contain minimum 6 length and small, capital, number, special character. ",
       });
-      setUserInfo({ ...userInfo, password: '' });
-
+      setUserInfo({ ...userInfo, password: "" });
     }
   }
 
-  /* if( !userInfo.email && !userInfo.password){
-    window.event.target.agreeTAndC.checked = false;
-  } */
+  // creating user with email and password
+  const [createUserWithEmailAndPassword, user, loading, hookError] =
+    useCreateUserWithEmailAndPassword(auth);
+  function handelRegisterSubmit(e) {
+    e.preventDefault();
 
-  function creatUserWithEmailAndPassword (e) {
-    e.preventDefault()
-
-    if( userInfo.email && userInfo.password){
-      createUserWithEmailAndPassword(userInfo.email, userInfo.password);
-      setErrors({...errors, generalError: ''})
-    }
-    else {
-      setErrors({...errors, generalError: 'Email and password must require'})
+    if (userInfo.email && userInfo.password) {
+      createUserWithEmailAndPassword(userInfo.email, userInfo.password, {
+        sendEmailVerification: true,
+      });
+      setErrors({ ...errors, generalError: "" });
+    } else {
+      setErrors({ ...errors, generalError: "Email and password must require" });
     }
   }
+
+  // after get user data then user redirecting
+  const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
+
+  // Email user 
+  if (user) {
+    setErrors({ ...errors, firebaseError: "" });
+    toast.dark("Email verification link send", {
+      toastId: 'e-v-l_id'
+    });
+    navigate(from, { replace: true });
+  }
+
+  // email user error handel
+  useEffect(() => {
+    if (hookError) {
+      switch (hookError?.message) {
+        case "Firebase: Error (auth/email-already-in-use).":
+          toast.warn("Account exist with this email");
+          break;
+
+        default:
+          toast.warn("Something went wrong!!!");
+          break;
+      }
+    }
+  }, [hookError]); 
+
+// Create user with google
+  const [signInWithGoogle, user_google, loading_google, error_google] = useSignInWithGoogle(auth);
+
+  function handelGoogleSignUp() {
+    signInWithGoogle();
+  }
+
+//  Google user 
+  if(user_google) {
+    setErrors({ ...errors, firebaseError: "" });
+    toast("Email verification link send");
+    navigate(from, { replace: true });
+  }
+
+/*   // Google user error handel
+  useEffect(() => {
+    console.log(error_google);
+    if (error_google) {
+      switch (error_google?.message) {
+        case "Firebase: Error (auth/email-already-in-use).":
+          toast.warn("Account exist with this email");
+          break;
+
+        default:
+          toast.warn("Something went wrong!!!");
+          break;
+      }
+    }
+  }, [error_google]); */
 
   return (
     <div className="w-full flex flex-col justify-center items-center my-10">
-      <form className="w-[320px] flex flex-col items-center" onSubmit={creatUserWithEmailAndPassword}>
+      <form
+        className="w-[320px] flex flex-col items-center"
+        onSubmit={handelRegisterSubmit}>
         <div className="w-full mb-3">
           <input
             type="text"
@@ -177,8 +235,10 @@ const Register = () => {
           <p className="text-[coral] ml-3">
             {errors.passwordError && errors.passwordError}
           </p>
-        </div> 
-        <p className="text-red-500 ml-3 font-medium">{errors.generalError && errors.generalError}</p>
+        </div>
+        <p className="text-red-500 ml-3 font-medium">
+          {errors.generalError && errors.generalError}
+        </p>
         <div className="w-full flex justify-between mt-5 text-md font-medium">
           <div className="flex items-center gap-2">
             <input
@@ -219,13 +279,17 @@ const Register = () => {
       </div>
 
       <div className="w-[320px] flex flex-col gap-3 text-white text-lg font-medium">
-        <button className="w-full bg-[#3B5998] py-1.5 rounded-md">
-          <FontAwesomeIcon icon={faFacebookSquare} />
-          <span className="ml-2">Continue With Facebook</span>
-        </button>
-        <button className="w-full bg-[#DB4437] py-1.5 rounded-md">
+        <button
+          className="w-full bg-[#DB4437] py-1.5 rounded-md"
+          onClick={handelGoogleSignUp}>
           <FontAwesomeIcon icon={faGoogle} />
           <span className="ml-2">Continue With Google</span>
+        </button>
+        <button className="w-full bg-[#3B5998] py-1.5 rounded-md" disabled>
+          <FontAwesomeIcon icon={faFacebookSquare} />
+          <span className="ml-2">
+            Continue With Facebook <br /> (working on it)
+          </span>
         </button>
       </div>
     </div>
