@@ -4,6 +4,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
+  useSendPasswordResetEmail,
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
@@ -189,7 +190,10 @@ const Login = () => {
             />
             <label htmlFor="">Remember me</label>
           </div>
-          <button className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer">
+          <button 
+          className="text-shadeOfPrimary font-medium ml-2 hover:cursor-pointer"
+          onClick={() => navigate('/forgot-password')}
+          >
             Forgot password?
           </button>
         </div>

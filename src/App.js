@@ -12,6 +12,7 @@ import RequireAuth from './components/auth/RequireAuth/RequireAuth';
 import Login from './components/auth/Login/Login';
 import Register from './components/auth/Register/Register';
 import UserAccount from './components/auth/UserAccount/UserAccount';
+import ForgetPassword from './components/auth/ForgetPassword/ForgetPassword';
 
 
 
@@ -30,6 +31,7 @@ function App() {
        <Route path='/login' element={<Login></Login>}></Route>
        <Route path='/sign-up' element={<Register></Register>}></Route>
        <Route path='/user-account' element={<UserAccount></UserAccount>}></Route>
+       <Route path='/forgot-password' element={<ForgetPassword></ForgetPassword>}></Route>
        <Route path='*' element={<NotFound></NotFound>}></Route>
      </Routes>
      <Footer></Footer>
