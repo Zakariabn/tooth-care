@@ -141,28 +141,29 @@ const Register = () => {
     signInWithGoogle();
   }
 
-//  Google user 
-  if(user_google) {
-    setErrors({ ...errors, firebaseError: "" });
-    toast("Email verification link send");
-    navigate(from, { replace: true });
-  }
-
-/*   // Google user error handel
+  // google error handel
   useEffect(() => {
-    console.log(error_google);
     if (error_google) {
       switch (error_google?.message) {
-        case "Firebase: Error (auth/email-already-in-use).":
-          toast.warn("Account exist with this email");
+        case "Firebase: Error (auth/cancelled-popup-request).":
+          toast.warn("Dont click to quickly");
           break;
+
+      case "Firebase: Error (auth/popup-closed-by-user).":
+        toast.error("You closed window. sign in failed");
+        break;
 
         default:
           toast.warn("Something went wrong!!!");
           break;
       }
     }
-  }, [error_google]); */
+  }, [error_google]); 
+
+//  Google user 
+  if(user_google) {
+    navigate(from, { replace: true });
+  }
 
   return (
     <div className="w-full flex flex-col justify-center items-center my-10">

@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  useSignInWithEmailAndPassword,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
   const [passVisible, setPassVisible] = useState(false);
-
-  const [
-    signInWithEmailAndPassword,
-    user,
-    loading,
-    error,
-  ] = useSignInWithEmailAndPassword(auth);
 
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -57,14 +53,18 @@ const Login = () => {
     }
   }
 
+  // login handel using email and password
+  const [signInWithEmailAndPassword, user, loading, hookError] =
+    useSignInWithEmailAndPassword(auth);
+
   function handelLogin(e) {
     e.preventDefault();
 
-    if( userInfo.email && userInfo.password){
+    if (userInfo.email && userInfo.password) {
       signInWithEmailAndPassword(userInfo.email, userInfo.password);
-      setErrors({...errors, generalError: ''})
-    }else {
-      setErrors({...errors, generalError: 'Email and password must require'})
+      setErrors({ ...errors, generalError: "" });
+    } else {
+      setErrors({ ...errors, generalError: "Email and password must require" });
     }
   }
 
@@ -73,19 +73,59 @@ const Login = () => {
   let from = location.state?.from?.pathname || "/";
 
   if (user) {
-
-    navigate(from, {replace: true})
+    navigate(from, { replace: true });
   }
 
+  // login with email-password error handel
+  useEffect(() => {
+    if (hookError) {
+      switch (hookError?.message) {
+        case "Firebase: Error (auth/wrong-password).":
+          toast.error("Email and password doesn't match", {
+            toastId: "wrong-pass",
+          });
+          break;
+
+        case "Firebase: Error (auth/user-not-found).":
+          toast.error("User not found. Please sign up", { toastId: "u-not-f" });
+          break;
+
+        default:
+          toast.error("Something went wrong!!!");
+          break;
+      }
+    }
+  }, [hookError]);
+
   // Create user with google
-  const [signInWithGoogle, user_google, loading_google, error_google] = useSignInWithGoogle(auth);
+  const [signInWithGoogle, user_google, loading_google, error_google] =
+    useSignInWithGoogle(auth);
 
   function handelGoogleSignUp() {
     signInWithGoogle();
   }
 
-//  Google user 
-  if(user_google) {
+  // google error handel
+  useEffect(() => {
+    if (error_google) {
+      switch (error_google?.message) {
+        case "Firebase: Error (auth/cancelled-popup-request).":
+          toast.warn("Dont click to quickly");
+          break;
+
+        case "Firebase: Error (auth/popup-closed-by-user).":
+          toast.error("You closed window. sign in failed");
+          break;
+
+        default:
+          toast.warn("Something went wrong!!!");
+          break;
+      }
+    }
+  }, [error_google]);
+
+  //  Google user
+  if (user_google) {
     setErrors({ ...errors, firebaseError: "" });
     toast("Email verification link send");
     navigate(from, { replace: true });
@@ -93,7 +133,9 @@ const Login = () => {
 
   return (
     <div className="w-full flex flex-col justify-center items-center my-10">
-      <form className="w-[320px] flex flex-col items-center" onSubmit={handelLogin}>
+      <form
+        className="w-[320px] flex flex-col items-center"
+        onSubmit={handelLogin}>
         <div className="w-full mb-3">
           <input
             type="text"
@@ -134,7 +176,9 @@ const Login = () => {
             {errors.passwordError && errors.passwordError}
           </p>
         </div>
-        <p className="text-red-500 ml-3 font-medium">{errors.generalError && errors.generalError}</p>
+        <p className="text-red-500 ml-3 font-medium">
+          {errors.generalError && errors.generalError}
+        </p>
         <div className="w-full flex justify-between mt-5 text-md font-medium">
           <div className="flex items-center gap-2">
             <input
@@ -172,13 +216,17 @@ const Login = () => {
       </div>
 
       <div className="w-[320px] flex flex-col gap-3 text-white text-lg font-medium">
-        <button className="w-full bg-[#DB4437] py-1.5 rounded-md" onClick={handelGoogleSignUp}>
+        <button
+          className="w-full bg-[#DB4437] py-1.5 rounded-md"
+          onClick={handelGoogleSignUp}>
           <FontAwesomeIcon icon={faGoogle} />
           <span className="ml-2">Continue With Google</span>
         </button>
         <button className="w-full bg-[#3B5998] py-1.5 rounded-md">
           <FontAwesomeIcon icon={faFacebookSquare} />
-          <span className="ml-2">Continue With Facebook <br /> working on it</span>
+          <span className="ml-2">
+            Continue With Facebook <br /> working on it
+          </span>
         </button>
       </div>
     </div>
