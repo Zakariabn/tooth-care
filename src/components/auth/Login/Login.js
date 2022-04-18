@@ -130,6 +130,7 @@ const Login = () => {
     setErrors({ ...errors, firebaseError: "" });
     toast("Email verification link send");
     navigate(from, { replace: true });
+    
   }
 
   return (

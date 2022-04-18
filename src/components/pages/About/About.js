@@ -40,9 +40,10 @@ const About = () => {
         {/* body */}
         <div className="mb-8 ">
           <p className="text-justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic aliquam
-            ea porro. Facilis recusandae, explicabo provident dolor officia
-            delectus exercitationem.
+            আমি জাকারিয়া আমার কোন জিনিসকে অটোমেটিক করতে অনেক ভালো লাগে এবং আমি
+            গেম খেলতে অনেক পছন্দ করি  আমি সাউথইস্ট ইউনিভার্সিটি তে সিএসই করতেছি 5
+            সেমিস্টার, <br /><br />  ছাত্র থাকা অবস্থায় মার্কেট কেমন জব কেমন তাদের রিকোয়ারমেন্ট কি থাকে এজন্য নিজেকে প্রস্তুত করছি এবং এর জন্য নিজেকে যতোটুকু
+            প্রিপেয়ার করা দরকার আমি সেটা করার সর্বাত্মক চেষ্টা করছি <br /><br /> আগামী তিন থেকে পাঁচ মাসে আমার টার্গেট front-end এবং back-end এর Basic এবং Intermediate লেভেলের concept গুলোতে Confident হওয়া এবং ওয়েব সফটওয়্যার রিলেটেড কোন কোম্পানির সাথে যুক্ত হওয়া
           </p>
         </div>
 
