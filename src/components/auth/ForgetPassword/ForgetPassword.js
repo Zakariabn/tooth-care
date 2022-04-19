@@ -25,9 +25,8 @@ const ForgetPassword = () => {
     }
   }
 
-  const [sendPasswordResetEmail, sending, hookError] = useSendPasswordResetEmail(
-    auth
-  );
+  const [sendPasswordResetEmail, sending, hookError] = useSendPasswordResetEmail(auth);
+
   function handelForgetPassword (e) {
     e.preventDefault();
 

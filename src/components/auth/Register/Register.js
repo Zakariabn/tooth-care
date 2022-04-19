@@ -166,7 +166,7 @@ const Register = () => {
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-center my-10">
+    <div className="w-full flex flex-col justify-center items-center my-[6.2rem]">
       <form
         className="w-[320px] flex flex-col items-center"
         onSubmit={handelRegisterSubmit}>

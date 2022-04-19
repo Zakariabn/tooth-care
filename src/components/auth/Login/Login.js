@@ -128,13 +128,12 @@ const Login = () => {
   //  Google user
   if (user_google) {
     setErrors({ ...errors, firebaseError: "" });
-    toast("Email verification link send");
     navigate(from, { replace: true });
     
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-center my-10">
+    <div className="w-full flex flex-col justify-center items-center my-[9.7rem]">
       <form
         className="w-[320px] flex flex-col items-center"
         onSubmit={handelLogin}>
